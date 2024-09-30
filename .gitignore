@@ -1,0 +1,6 @@
+# workspace
+.vscode
+.vscode/*
+
+# node
+nodesource_setup.sh
