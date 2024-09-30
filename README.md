@@ -13,8 +13,9 @@ Commit Type:
 - `perf`: improve performance
 - `refactor`: code change without bug fix or feature
 - `test`: test cases
+- `chore`: change without affecting functionality
 
 Branch Naming Conventions:
 - `feat/*`: feature
 - `fix/*`: bug fix
-- `task/*`: miscellaneous
+- `task/*`: miscellaneousgit
