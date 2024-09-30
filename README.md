@@ -18,4 +18,4 @@ Commit Type:
 Branch Naming Conventions:
 - `feat/*`: feature
 - `fix/*`: bug fix
-- `task/*`: miscellaneousgit
+- `task/*`: miscellaneous
