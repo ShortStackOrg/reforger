@@ -1,7 +1,6 @@
 "use client"
 import Button from "../../components/Button"
-
-
+import Profile from "../../components/Profile"
 
 const ReforgerMainPage = () => {
   const handleButtonClick = () => {
@@ -13,6 +12,7 @@ const ReforgerMainPage = () => {
         <h1 className="text-4xl font-bold mb-4 text-center">Resume Reforger</h1>
         <p className="text-lg text-center mb-8">This is the main page</p>
         <Button text="Build Resume" onClick={handleButtonClick} />
+        <Profile />
       </div>
     );
   };
