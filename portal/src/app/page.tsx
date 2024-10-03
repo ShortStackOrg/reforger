@@ -1,8 +1,8 @@
-//This is where the routes are
+//root page
 export default function Home() {
   return (
     <div>
-      Test
+      Root Page
     </div>
   );
 }
