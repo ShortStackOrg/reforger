@@ -2,8 +2,8 @@
 const HomePage = () => {
   return (
     <div>
-      <h1>Welcome to My Next.js App</h1>
-      <p>This is a super basic home page.</p>
+      <h1>Welcome to Reforger</h1>
+      <p>This is the home page</p>
     </div>
   );
 };

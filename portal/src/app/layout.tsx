@@ -9,17 +9,13 @@ const RootLayout = ({ children }: RootLayoutProps) => {
   return (
     <html lang="en">
       <head>
-        <title>My Next.js App</title>
+        <title>Reforger</title>
       </head>
       <body>
-        <header>
-          <nav>
-            <a href="/">Home</a> | <a href="/auth/login">Login</a>
-          </nav>
-        </header>
+        <nav>
+          <a href="/">Home</a> | <a href="/auth/login">Login</a>
+        </nav>
         <main>{children}</main>
-        <footer>
-        </footer>
       </body>
     </html>
   );
