@@ -2,6 +2,7 @@
 import './global.css';
 import { ReactNode } from 'react';
 import { UserProvider } from '@auth0/nextjs-auth0/client';
+import Profile from '../components/Profile'
 
 type RootLayoutProps = {
   children: ReactNode;
