@@ -1,6 +1,7 @@
 //Root Layout
 import './global.css';
 import { ReactNode } from 'react';
+import { UserProvider } from '@auth0/nextjs-auth0/client';
 
 type RootLayoutProps = {
   children: ReactNode;
