@@ -12,6 +12,8 @@
     "@auth0/nextjs-auth0": "^3.5.0",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
+    "@headlessui/react": "^2.1.9",
+    "@heroicons/react": "^2.1.5",
     "@mui/material": "^6.1.2",
     "next": "14.2.13",
     "react": "^18",
