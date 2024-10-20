@@ -1,13 +1,11 @@
 'use client'
 
-import {
-  PopoverGroup,
-} from '@headlessui/react'
-
 import Image from 'next/image'
-
+import { useUser } from '@auth0/nextjs-auth0/client'
 
 export default function Navbar() {
+
+  const { user } = useUser();
 
   return (
     <header className="bg-white">
@@ -24,7 +22,7 @@ export default function Navbar() {
             />
           </a>
         </div>
-        <PopoverGroup className="hidden lg:flex lg:gap-x-12">
+        <div className="hidden lg:flex lg:gap-x-12">
           <a href="/reforger" className="text-sm font-semibold leading-6 text-gray-900">
             Home
           </a>
@@ -34,11 +32,14 @@ export default function Navbar() {
           <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
             About
           </a>
-        </PopoverGroup>
-        <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-          <a href="/api/auth/login" className="text-sm font-semibold leading-6 text-gray-900">
-            Log in <span aria-hidden="true">&rarr;</span>
-          </a>
+        </div>
+        <div className= "hidde bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-300 ml-10">
+          {!user ? (
+            <a href="/api/auth/login">Login</a>) : (
+          <>
+            <a href="/api/auth/logout">Logout</a>
+          </>
+          )}
         </div>
       </nav>
     </header>
