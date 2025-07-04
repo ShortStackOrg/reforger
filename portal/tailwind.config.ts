@@ -12,8 +12,8 @@ const config: Config = {
         '400':'400px',
       },
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        background: '#1E1E1E',
+        foreground: "#FFFFFF",
       },
     },
   },
