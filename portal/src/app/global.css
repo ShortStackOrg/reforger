@@ -36,7 +36,7 @@
 
   .dark {
     --background: 220 7% 14%; /* dark gray, not black */
-    --foreground: 220 6% 85%; /* soft light gray text */
+    --foreground: 0 0% 100%;
     --card: 220 6% 15%;
     --card-foreground: 220 6% 85%;
 
