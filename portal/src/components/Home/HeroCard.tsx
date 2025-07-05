@@ -35,12 +35,11 @@ import Image from 'next/image';
 
 export default function HeroCard() {
   return (
-    <section className="flex flex-col-reverse md:flex-row items-center justify-around mx-auto px-[5%] h-1/2">
-      
+  <section className="flex flex-col-reverse md:flex-row w-full items-center justify-center gap-8 mx-auto px-[5%] h-auto md:h-[50vh] bg-gray-200 rounded-bl-[5rem] rounded-tr-[5rem]">
       {/* Image Section */}
       <div className="w-full md:w-1/2 h-64 relative">
         <Image
-          src="/images/reforger_logo.png" // replace with your image
+          src="/images/reforger_logo.png"
           alt="Build your resume easily"
           layout="fill"
           objectFit="contain"
@@ -49,7 +48,7 @@ export default function HeroCard() {
       </div>
 
       {/* Text and Buttons Section */}
-      <div className="w-full md:w-1/2 pt-6 md:ml-8 flex flex-col justify-start">
+      <div className="w-full md:w-1/2 pt-6 pr-6 md:ml-8 flex flex-col justify-start">
         <h1 className="text-3xl font-bold mb-4">
           Build Your Resume Effortlessly
         </h1>
@@ -61,7 +60,7 @@ export default function HeroCard() {
           <button className="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition">
             Get Started
           </button>
-          <button className="bg-gray-200 text-gray-800 px-6 py-3 rounded-md hover:bg-gray-300 transition">
+          <button className="bg-gray-300 text-gray-800 px-6 py-3 rounded-md hover:bg-gray-500 transition">
             Learn More
           </button>
         </div>
@@ -70,6 +69,7 @@ export default function HeroCard() {
     </section>
   );
 }
+
 
 // export default function HeroCard() {
 //   return (
