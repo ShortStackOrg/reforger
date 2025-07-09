@@ -60,7 +60,7 @@ export default function HeroCard() {
         </p>
         
         <div className="flex flex-col gap-4">
-          <button className="bg-blue-600 text-white px-6 py-3 rounded-3xl hover:bg-blue-700 transition">
+          <button className="bg-teal-500 text-white px-6 py-3 rounded-3xl hover:bg-blue-700 transition">
             Get Started
           </button>
           <button className="bg-gray-300 text-gray-800 px-6 py-3 rounded-3xl hover:bg-gray-500 transition">
