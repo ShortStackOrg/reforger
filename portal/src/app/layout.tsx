@@ -13,7 +13,7 @@ const RootLayout = ({ children }: RootLayoutProps) => {
       <head>
         <title>Reforger</title>
       </head>
-      <body className="bg-slate-300 text-gray-900 min-h-screen flex flex-col mb-400">
+      <body className="dark bg-background text-gray-900 min-h-screen flex flex-col mb-400 ">
         <NavBar />
         <main>{children}</main>
       </body>
