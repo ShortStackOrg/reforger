@@ -71,6 +71,20 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-body;
   }
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display;
+  }
+}
+
+body.pdf-export-mode {
+  background: white;
+}
+
+body.pdf-export-mode #resume-canvas {
+  box-shadow: none;
 }
