@@ -1,51 +1,147 @@
+"use client";
+
 import { defaultResumeData } from '@/lib/defaultResumeData';
-import { ResumeData, ResumeSectionId } from '@/types/resume';
+import {
+  EducationItem,
+  ExperienceItem,
+  ResumeData,
+  ResumeSection,
+  SectionType,
+  SkillItem,
+} from '@/types/resume';
 import React, { createContext, useContext, useMemo, useState } from 'react';
 
 type ResumeContextValue = {
   resumeData: ResumeData;
   updateBasics: (field: keyof ResumeData['basics'], value: string) => void;
-  updateExperience: (
-    id: string,
-    field: keyof ResumeData['experience'][number],
+  addSection: (type: SectionType) => void;
+  removeSection: (sectionId: string) => void;
+  moveSection: (sectionId: string, direction: 'up' | 'down') => void;
+  toggleSectionVisibility: (sectionId: string) => void;
+  updateSectionTitle: (sectionId: string, title: string) => void;
+  addItem: (sectionId: string) => void;
+  removeItem: (sectionId: string, itemId: string) => void;
+  updateExperienceItem: (
+    sectionId: string,
+    itemId: string,
+    field: keyof ExperienceItem,
     value: string
   ) => void;
-  updateExperienceHighlight: (id: string, index: number, value: string) => void;
-  addExperienceHighlight: (id: string) => void;
-  removeExperienceHighlight: (id: string, index: number) => void;
-  updateProject: (
-    id: string,
-    field: keyof ResumeData['projects'][number],
+  updateEducationItem: (
+    sectionId: string,
+    itemId: string,
+    field: keyof EducationItem,
     value: string
   ) => void;
-  updateProjectHighlight: (id: string, index: number, value: string) => void;
-  addProjectHighlight: (id: string) => void;
-  removeProjectHighlight: (id: string, index: number) => void;
-  updateEducation: (
-    id: string,
-    field: keyof ResumeData['education'][number],
+  updateSkillItem: (
+    sectionId: string,
+    itemId: string,
+    field: keyof SkillItem,
     value: string
   ) => void;
-  updateEducationDetail: (id: string, index: number, value: string) => void;
-  addEducationDetail: (id: string) => void;
-  removeEducationDetail: (id: string, index: number) => void;
-  updateSkillGroup: (
-    id: string,
-    field: keyof ResumeData['skills'][number],
+  updateExperienceHighlight: (
+    sectionId: string,
+    itemId: string,
+    index: number,
     value: string
   ) => void;
-  updateSkillItem: (id: string, index: number, value: string) => void;
-  addSkillItem: (id: string) => void;
-  removeSkillItem: (id: string, index: number) => void;
-  updateCertification: (
-    id: string,
-    field: keyof ResumeData['certifications'][number],
+  addExperienceHighlight: (sectionId: string, itemId: string) => void;
+  removeExperienceHighlight: (
+    sectionId: string,
+    itemId: string,
+    index: number
+  ) => void;
+  updateEducationDetail: (
+    sectionId: string,
+    itemId: string,
+    index: number,
     value: string
   ) => void;
-  toggleSection: (sectionId: ResumeSectionId, enabled: boolean) => void;
+  addEducationDetail: (sectionId: string, itemId: string) => void;
+  removeEducationDetail: (
+    sectionId: string,
+    itemId: string,
+    index: number
+  ) => void;
+  updateSkillEntry: (
+    sectionId: string,
+    itemId: string,
+    index: number,
+    value: string
+  ) => void;
+  addSkillEntry: (sectionId: string, itemId: string) => void;
+  removeSkillEntry: (
+    sectionId: string,
+    itemId: string,
+    index: number
+  ) => void;
 };
 
 const ResumeContext = createContext<ResumeContextValue | null>(null);
+
+const createId = (prefix: string) => {
+  if (typeof crypto !== 'undefined' && 'randomUUID' in crypto) {
+    return `${prefix}-${crypto.randomUUID()}`;
+  }
+  return `${prefix}-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+};
+
+const createExperienceItem = (): ExperienceItem => ({
+  id: createId('exp'),
+  company: '',
+  role: '',
+  location: '',
+  startDate: '',
+  endDate: '',
+  summary: '',
+  highlights: [''],
+});
+
+const createEducationItem = (): EducationItem => ({
+  id: createId('edu'),
+  school: '',
+  degree: '',
+  location: '',
+  startDate: '',
+  endDate: '',
+  details: [''],
+});
+
+const createSkillItem = (): SkillItem => ({
+  id: createId('skill'),
+  label: '',
+  items: [''],
+});
+
+const createSection = (type: SectionType): ResumeSection => {
+  switch (type) {
+    case 'experience':
+      return {
+        id: createId('section-exp'),
+        type: 'experience',
+        title: 'Experience',
+        visible: true,
+        items: [createExperienceItem()],
+      };
+    case 'education':
+      return {
+        id: createId('section-edu'),
+        type: 'education',
+        title: 'Education',
+        visible: true,
+        items: [createEducationItem()],
+      };
+    case 'skills':
+    default:
+      return {
+        id: createId('section-skill'),
+        type: 'skills',
+        title: 'Skills',
+        visible: true,
+        items: [createSkillItem()],
+      };
+  }
+};
 
 const updateListItem = (items: string[], index: number, value: string) =>
   items.map((item, itemIndex) => (itemIndex === index ? value : item));
@@ -68,202 +164,323 @@ export const ResumeProvider = ({
           basics: { ...prev.basics, [field]: value },
         }));
       },
-      updateExperience: (id, field, value) => {
+      addSection: (type) => {
         setResumeData((prev) => ({
           ...prev,
-          experience: prev.experience.map((item) =>
-            item.id === id ? { ...item, [field]: value } : item
+          sections: [...prev.sections, createSection(type)],
+        }));
+      },
+      removeSection: (sectionId) => {
+        setResumeData((prev) => ({
+          ...prev,
+          sections: prev.sections.filter((section) => section.id !== sectionId),
+        }));
+      },
+      moveSection: (sectionId, direction) => {
+        setResumeData((prev) => {
+          const index = prev.sections.findIndex(
+            (section) => section.id === sectionId
+          );
+          if (index === -1) {
+            return prev;
+          }
+          const nextIndex = direction === 'up' ? index - 1 : index + 1;
+          if (nextIndex < 0 || nextIndex >= prev.sections.length) {
+            return prev;
+          }
+          const nextSections = [...prev.sections];
+          const [removed] = nextSections.splice(index, 1);
+          nextSections.splice(nextIndex, 0, removed);
+          return { ...prev, sections: nextSections };
+        });
+      },
+      toggleSectionVisibility: (sectionId) => {
+        setResumeData((prev) => ({
+          ...prev,
+          sections: prev.sections.map((section) =>
+            section.id === sectionId
+              ? { ...section, visible: !section.visible }
+              : section
           ),
         }));
       },
-      updateExperienceHighlight: (id, index, value) => {
+      updateSectionTitle: (sectionId, title) => {
         setResumeData((prev) => ({
           ...prev,
-          experience: prev.experience.map((item) =>
-            item.id === id
-              ? {
-                  ...item,
-                  highlights: updateListItem(item.highlights, index, value),
-                }
-              : item
+          sections: prev.sections.map((section) =>
+            section.id === sectionId ? { ...section, title } : section
           ),
         }));
       },
-      addExperienceHighlight: (id) => {
+      addItem: (sectionId) => {
         setResumeData((prev) => ({
           ...prev,
-          experience: prev.experience.map((item) =>
-            item.id === id
-              ? { ...item, highlights: [...item.highlights, 'New highlight'] }
-              : item
-          ),
+          sections: prev.sections.map((section) => {
+            if (section.id !== sectionId) {
+              return section;
+            }
+            if (section.type === 'experience') {
+              return {
+                ...section,
+                items: [...section.items, createExperienceItem()],
+              };
+            }
+            if (section.type === 'education') {
+              return {
+                ...section,
+                items: [...section.items, createEducationItem()],
+              };
+            }
+            return { ...section, items: [...section.items, createSkillItem()] };
+          }),
         }));
       },
-      removeExperienceHighlight: (id, index) => {
+      removeItem: (sectionId, itemId) => {
         setResumeData((prev) => ({
           ...prev,
-          experience: prev.experience.map((item) =>
-            item.id === id
-              ? {
-                  ...item,
-                  highlights: item.highlights.filter(
-                    (_, itemIndex) => itemIndex !== index
-                  ),
-                }
-              : item
-          ),
+          sections: prev.sections.map((section) => {
+            if (section.id !== sectionId) {
+              return section;
+            }
+            return {
+              ...section,
+              items: section.items.filter((item) => item.id !== itemId),
+            };
+          }),
         }));
       },
-      updateProject: (id, field, value) => {
+      updateExperienceItem: (sectionId, itemId, field, value) => {
         setResumeData((prev) => ({
           ...prev,
-          projects: prev.projects.map((item) =>
-            item.id === id ? { ...item, [field]: value } : item
-          ),
+          sections: prev.sections.map((section) => {
+            if (section.id !== sectionId || section.type !== 'experience') {
+              return section;
+            }
+            return {
+              ...section,
+              items: section.items.map((item) =>
+                item.id === itemId ? { ...item, [field]: value } : item
+              ),
+            };
+          }),
         }));
       },
-      updateProjectHighlight: (id, index, value) => {
+      updateEducationItem: (sectionId, itemId, field, value) => {
         setResumeData((prev) => ({
           ...prev,
-          projects: prev.projects.map((item) =>
-            item.id === id
-              ? {
-                  ...item,
-                  highlights: updateListItem(item.highlights, index, value),
-                }
-              : item
-          ),
+          sections: prev.sections.map((section) => {
+            if (section.id !== sectionId || section.type !== 'education') {
+              return section;
+            }
+            return {
+              ...section,
+              items: section.items.map((item) =>
+                item.id === itemId ? { ...item, [field]: value } : item
+              ),
+            };
+          }),
         }));
       },
-      addProjectHighlight: (id) => {
+      updateSkillItem: (sectionId, itemId, field, value) => {
         setResumeData((prev) => ({
           ...prev,
-          projects: prev.projects.map((item) =>
-            item.id === id
-              ? { ...item, highlights: [...item.highlights, 'New highlight'] }
-              : item
-          ),
+          sections: prev.sections.map((section) => {
+            if (section.id !== sectionId || section.type !== 'skills') {
+              return section;
+            }
+            return {
+              ...section,
+              items: section.items.map((item) =>
+                item.id === itemId ? { ...item, [field]: value } : item
+              ),
+            };
+          }),
         }));
       },
-      removeProjectHighlight: (id, index) => {
+      updateExperienceHighlight: (sectionId, itemId, index, value) => {
         setResumeData((prev) => ({
           ...prev,
-          projects: prev.projects.map((item) =>
-            item.id === id
-              ? {
-                  ...item,
-                  highlights: item.highlights.filter(
-                    (_, itemIndex) => itemIndex !== index
-                  ),
-                }
-              : item
-          ),
+          sections: prev.sections.map((section) => {
+            if (section.id !== sectionId || section.type !== 'experience') {
+              return section;
+            }
+            return {
+              ...section,
+              items: section.items.map((item) =>
+                item.id === itemId
+                  ? {
+                      ...item,
+                      highlights: updateListItem(item.highlights, index, value),
+                    }
+                  : item
+              ),
+            };
+          }),
         }));
       },
-      updateEducation: (id, field, value) => {
+      addExperienceHighlight: (sectionId, itemId) => {
         setResumeData((prev) => ({
           ...prev,
-          education: prev.education.map((item) =>
-            item.id === id ? { ...item, [field]: value } : item
-          ),
+          sections: prev.sections.map((section) => {
+            if (section.id !== sectionId || section.type !== 'experience') {
+              return section;
+            }
+            return {
+              ...section,
+              items: section.items.map((item) =>
+                item.id === itemId
+                  ? { ...item, highlights: [...item.highlights, ''] }
+                  : item
+              ),
+            };
+          }),
         }));
       },
-      updateEducationDetail: (id, index, value) => {
+      removeExperienceHighlight: (sectionId, itemId, index) => {
         setResumeData((prev) => ({
           ...prev,
-          education: prev.education.map((item) =>
-            item.id === id
-              ? {
-                  ...item,
-                  details: updateListItem(item.details, index, value),
-                }
-              : item
-          ),
+          sections: prev.sections.map((section) => {
+            if (section.id !== sectionId || section.type !== 'experience') {
+              return section;
+            }
+            return {
+              ...section,
+              items: section.items.map((item) =>
+                item.id === itemId
+                  ? {
+                      ...item,
+                      highlights: item.highlights.filter(
+                        (_, itemIndex) => itemIndex !== index
+                      ),
+                    }
+                  : item
+              ),
+            };
+          }),
         }));
       },
-      addEducationDetail: (id) => {
+      updateEducationDetail: (sectionId, itemId, index, value) => {
         setResumeData((prev) => ({
           ...prev,
-          education: prev.education.map((item) =>
-            item.id === id
-              ? { ...item, details: [...item.details, 'New detail'] }
-              : item
-          ),
+          sections: prev.sections.map((section) => {
+            if (section.id !== sectionId || section.type !== 'education') {
+              return section;
+            }
+            return {
+              ...section,
+              items: section.items.map((item) =>
+                item.id === itemId
+                  ? {
+                      ...item,
+                      details: updateListItem(item.details, index, value),
+                    }
+                  : item
+              ),
+            };
+          }),
         }));
       },
-      removeEducationDetail: (id, index) => {
+      addEducationDetail: (sectionId, itemId) => {
         setResumeData((prev) => ({
           ...prev,
-          education: prev.education.map((item) =>
-            item.id === id
-              ? {
-                  ...item,
-                  details: item.details.filter(
-                    (_, itemIndex) => itemIndex !== index
-                  ),
-                }
-              : item
-          ),
+          sections: prev.sections.map((section) => {
+            if (section.id !== sectionId || section.type !== 'education') {
+              return section;
+            }
+            return {
+              ...section,
+              items: section.items.map((item) =>
+                item.id === itemId
+                  ? { ...item, details: [...item.details, ''] }
+                  : item
+              ),
+            };
+          }),
         }));
       },
-      updateSkillGroup: (id, field, value) => {
+      removeEducationDetail: (sectionId, itemId, index) => {
         setResumeData((prev) => ({
           ...prev,
-          skills: prev.skills.map((item) =>
-            item.id === id ? { ...item, [field]: value } : item
-          ),
+          sections: prev.sections.map((section) => {
+            if (section.id !== sectionId || section.type !== 'education') {
+              return section;
+            }
+            return {
+              ...section,
+              items: section.items.map((item) =>
+                item.id === itemId
+                  ? {
+                      ...item,
+                      details: item.details.filter(
+                        (_, itemIndex) => itemIndex !== index
+                      ),
+                    }
+                  : item
+              ),
+            };
+          }),
         }));
       },
-      updateSkillItem: (id, index, value) => {
+      updateSkillEntry: (sectionId, itemId, index, value) => {
         setResumeData((prev) => ({
           ...prev,
-          skills: prev.skills.map((item) =>
-            item.id === id
-              ? {
-                  ...item,
-                  items: updateListItem(item.items, index, value),
-                }
-              : item
-          ),
+          sections: prev.sections.map((section) => {
+            if (section.id !== sectionId || section.type !== 'skills') {
+              return section;
+            }
+            return {
+              ...section,
+              items: section.items.map((item) =>
+                item.id === itemId
+                  ? {
+                      ...item,
+                      items: updateListItem(item.items, index, value),
+                    }
+                  : item
+              ),
+            };
+          }),
         }));
       },
-      addSkillItem: (id) => {
+      addSkillEntry: (sectionId, itemId) => {
         setResumeData((prev) => ({
           ...prev,
-          skills: prev.skills.map((item) =>
-            item.id === id
-              ? { ...item, items: [...item.items, 'New skill'] }
-              : item
-          ),
+          sections: prev.sections.map((section) => {
+            if (section.id !== sectionId || section.type !== 'skills') {
+              return section;
+            }
+            return {
+              ...section,
+              items: section.items.map((item) =>
+                item.id === itemId
+                  ? { ...item, items: [...item.items, ''] }
+                  : item
+              ),
+            };
+          }),
         }));
       },
-      removeSkillItem: (id, index) => {
+      removeSkillEntry: (sectionId, itemId, index) => {
         setResumeData((prev) => ({
           ...prev,
-          skills: prev.skills.map((item) =>
-            item.id === id
-              ? {
-                  ...item,
-                  items: item.items.filter(
-                    (_, itemIndex) => itemIndex !== index
-                  ),
-                }
-              : item
-          ),
-        }));
-      },
-      updateCertification: (id, field, value) => {
-        setResumeData((prev) => ({
-          ...prev,
-          certifications: prev.certifications.map((item) =>
-            item.id === id ? { ...item, [field]: value } : item
-          ),
-        }));
-      },
-      toggleSection: (sectionId, enabled) => {
-        setResumeData((prev) => ({
-          ...prev,
-          sections: { ...prev.sections, [sectionId]: enabled },
+          sections: prev.sections.map((section) => {
+            if (section.id !== sectionId || section.type !== 'skills') {
+              return section;
+            }
+            return {
+              ...section,
+              items: section.items.map((item) =>
+                item.id === itemId
+                  ? {
+                      ...item,
+                      items: item.items.filter(
+                        (_, itemIndex) => itemIndex !== index
+                      ),
+                    }
+                  : item
+              ),
+            };
+          }),
         }));
       },
     }),

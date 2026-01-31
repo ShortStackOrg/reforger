@@ -30,7 +30,7 @@ const EditableList = ({
     <div className={cn('space-y-2', className)}>
       <ListElement className="space-y-1">
         {items.map((item, index) => (
-          <li key={`${index}-${item.slice(0, 10)}`} className="flex gap-2">
+          <li key={index} className="flex gap-2">
             <span className="mt-1 text-xs text-muted-foreground">
               {ordered ? `${index + 1}.` : '•'}
             </span>

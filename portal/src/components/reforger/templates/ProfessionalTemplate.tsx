@@ -2,6 +2,7 @@
 
 import EditableList from '@/components/reforger/editor/EditableList';
 import EditableText from '@/components/reforger/editor/EditableText';
+import ItemWrapper from '@/components/reforger/editor/ItemWrapper';
 import SectionWrapper from '@/components/reforger/editor/SectionWrapper';
 import { useResume } from '@/context/ResumeContext';
 
@@ -9,27 +10,24 @@ const ProfessionalTemplate = () => {
   const {
     resumeData,
     updateBasics,
-    updateExperience,
+    updateSectionTitle,
+    addItem,
+    removeItem,
+    updateExperienceItem,
     updateExperienceHighlight,
     addExperienceHighlight,
     removeExperienceHighlight,
-    updateProject,
-    updateProjectHighlight,
-    addProjectHighlight,
-    removeProjectHighlight,
-    updateEducation,
+    updateEducationItem,
     updateEducationDetail,
     addEducationDetail,
     removeEducationDetail,
-    updateSkillGroup,
     updateSkillItem,
-    addSkillItem,
-    removeSkillItem,
-    updateCertification,
+    updateSkillEntry,
+    addSkillEntry,
+    removeSkillEntry,
   } = useResume();
 
-  const { basics, experience, projects, education, skills, certifications, sections } =
-    resumeData;
+  const { basics, sections } = resumeData;
 
   return (
     <div className="flex h-full w-full flex-col gap-8 bg-white px-10 py-12 text-slate-900">
@@ -72,48 +70,198 @@ const ProfessionalTemplate = () => {
             />
           </div>
         </div>
-        {sections.summary ? (
-          <EditableText
-            value={basics.summary}
-            onChange={(value) => updateBasics('summary', value)}
-            className="text-sm leading-relaxed text-slate-600"
-            placeholder="Add a short summary"
-            multiline
-          />
-        ) : null}
       </header>
 
       <div className="grid gap-8">
-        {sections.experience ? (
-          <SectionWrapper title="Experience">
-            <div className="space-y-6">
-              {experience.map((item) => (
-                <div key={item.id} className="space-y-2">
-                  <div className="flex flex-wrap items-baseline justify-between gap-2">
-                    <div className="space-y-1">
+        {sections.map((section) => {
+          if (!section.visible) {
+            return null;
+          }
+          if (section.type === 'experience') {
+            return (
+              <SectionWrapper
+                key={section.id}
+                title={section.title}
+                onTitleChange={(value) => updateSectionTitle(section.id, value)}
+                onAddItem={() => addItem(section.id)}
+              >
+                <div className="space-y-6">
+                  {section.items.map((item) => (
+                    <ItemWrapper
+                      key={item.id}
+                      onRemove={() => removeItem(section.id, item.id)}
+                    >
+                      <div className="flex flex-wrap items-baseline justify-between gap-2">
+                        <div className="space-y-1">
+                          <EditableText
+                            value={item.role}
+                            onChange={(value) =>
+                              updateExperienceItem(
+                                section.id,
+                                item.id,
+                                'role',
+                                value
+                              )
+                            }
+                            className="text-sm font-semibold"
+                            placeholder="Role"
+                          />
+                          <EditableText
+                            value={item.company}
+                            onChange={(value) =>
+                              updateExperienceItem(
+                                section.id,
+                                item.id,
+                                'company',
+                                value
+                              )
+                            }
+                            className="text-xs uppercase tracking-[0.2em] text-slate-500"
+                            placeholder="Company"
+                          />
+                        </div>
+                        <div className="text-xs text-slate-500">
+                          <div className="flex items-center justify-end gap-2">
+                            <EditableText
+                              value={item.startDate}
+                              onChange={(value) =>
+                                updateExperienceItem(
+                                  section.id,
+                                  item.id,
+                                  'startDate',
+                                  value
+                                )
+                              }
+                              placeholder="Start"
+                            />
+                            <span className="text-slate-400">-</span>
+                            <EditableText
+                              value={item.endDate}
+                              onChange={(value) =>
+                                updateExperienceItem(
+                                  section.id,
+                                  item.id,
+                                  'endDate',
+                                  value
+                                )
+                              }
+                              placeholder="End"
+                            />
+                          </div>
+                          <EditableText
+                            value={item.location}
+                            onChange={(value) =>
+                              updateExperienceItem(
+                                section.id,
+                                item.id,
+                                'location',
+                                value
+                              )
+                            }
+                            placeholder="Location"
+                          />
+                        </div>
+                      </div>
                       <EditableText
-                        value={item.role}
+                        value={item.summary}
                         onChange={(value) =>
-                          updateExperience(item.id, 'role', value)
+                          updateExperienceItem(
+                            section.id,
+                            item.id,
+                            'summary',
+                            value
+                          )
+                        }
+                        className="text-sm text-slate-600"
+                        placeholder="Role summary"
+                        multiline
+                      />
+                      <EditableList
+                        items={item.highlights}
+                        onChange={(index, value) =>
+                          updateExperienceHighlight(
+                            section.id,
+                            item.id,
+                            index,
+                            value
+                          )
+                        }
+                        onAdd={() => addExperienceHighlight(section.id, item.id)}
+                        onRemove={(index) =>
+                          removeExperienceHighlight(section.id, item.id, index)
+                        }
+                        itemClassName="text-sm text-slate-700"
+                      />
+                    </ItemWrapper>
+                  ))}
+                </div>
+              </SectionWrapper>
+            );
+          }
+
+          if (section.type === 'education') {
+            return (
+              <SectionWrapper
+                key={section.id}
+                title={section.title}
+                onTitleChange={(value) => updateSectionTitle(section.id, value)}
+                onAddItem={() => addItem(section.id)}
+              >
+                <div className="space-y-5">
+                  {section.items.map((item) => (
+                    <ItemWrapper
+                      key={item.id}
+                      onRemove={() => removeItem(section.id, item.id)}
+                    >
+                      <EditableText
+                        value={item.school}
+                        onChange={(value) =>
+                          updateEducationItem(
+                            section.id,
+                            item.id,
+                            'school',
+                            value
+                          )
                         }
                         className="text-sm font-semibold"
-                        placeholder="Role"
+                        placeholder="School"
                       />
                       <EditableText
-                        value={item.company}
+                        value={item.degree}
                         onChange={(value) =>
-                          updateExperience(item.id, 'company', value)
+                          updateEducationItem(
+                            section.id,
+                            item.id,
+                            'degree',
+                            value
+                          )
                         }
                         className="text-xs uppercase tracking-[0.2em] text-slate-500"
-                        placeholder="Company"
+                        placeholder="Degree"
                       />
-                    </div>
-                    <div className="text-xs text-slate-500">
-                      <div className="flex items-center justify-end gap-2">
+                      <EditableText
+                        value={item.location}
+                        onChange={(value) =>
+                          updateEducationItem(
+                            section.id,
+                            item.id,
+                            'location',
+                            value
+                          )
+                        }
+                        className="text-xs text-slate-500"
+                        placeholder="Location"
+                      />
+                      <div className="flex items-center gap-2 text-xs text-slate-500">
                         <EditableText
                           value={item.startDate}
                           onChange={(value) =>
-                            updateExperience(item.id, 'startDate', value)
+                            updateEducationItem(
+                              section.id,
+                              item.id,
+                              'startDate',
+                              value
+                            )
                           }
                           placeholder="Start"
                         />
@@ -121,211 +269,77 @@ const ProfessionalTemplate = () => {
                         <EditableText
                           value={item.endDate}
                           onChange={(value) =>
-                            updateExperience(item.id, 'endDate', value)
+                            updateEducationItem(
+                              section.id,
+                              item.id,
+                              'endDate',
+                              value
+                            )
                           }
                           placeholder="End"
                         />
                       </div>
-                      <EditableText
-                        value={item.location}
-                        onChange={(value) =>
-                          updateExperience(item.id, 'location', value)
+                      <EditableList
+                        items={item.details}
+                        onChange={(index, value) =>
+                          updateEducationDetail(
+                            section.id,
+                            item.id,
+                            index,
+                            value
+                          )
                         }
-                        placeholder="Location"
+                        onAdd={() => addEducationDetail(section.id, item.id)}
+                        onRemove={(index) =>
+                          removeEducationDetail(section.id, item.id, index)
+                        }
+                        itemClassName="text-sm text-slate-700"
                       />
-                    </div>
-                  </div>
-                  <EditableText
-                    value={item.summary}
-                    onChange={(value) =>
-                      updateExperience(item.id, 'summary', value)
-                    }
-                    className="text-sm text-slate-600"
-                    placeholder="Role summary"
-                    multiline
-                  />
-                  <EditableList
-                    items={item.highlights}
-                    onChange={(index, value) =>
-                      updateExperienceHighlight(item.id, index, value)
-                    }
-                    onAdd={() => addExperienceHighlight(item.id)}
-                    onRemove={(index) =>
-                      removeExperienceHighlight(item.id, index)
-                    }
-                    itemClassName="text-sm text-slate-700"
-                  />
+                    </ItemWrapper>
+                  ))}
                 </div>
-              ))}
-            </div>
-          </SectionWrapper>
-        ) : null}
+              </SectionWrapper>
+            );
+          }
 
-        {sections.projects ? (
-          <SectionWrapper title="Projects">
-            <div className="space-y-5">
-              {projects.map((project) => (
-                <div key={project.id} className="space-y-2">
-                  <EditableText
-                    value={project.name}
-                    onChange={(value) =>
-                      updateProject(project.id, 'name', value)
-                    }
-                    className="text-sm font-semibold"
-                    placeholder="Project name"
-                  />
-                  <EditableText
-                    value={project.description}
-                    onChange={(value) =>
-                      updateProject(project.id, 'description', value)
-                    }
-                    className="text-sm text-slate-600"
-                    placeholder="Project description"
-                    multiline
-                  />
-                  <EditableList
-                    items={project.highlights}
-                    onChange={(index, value) =>
-                      updateProjectHighlight(project.id, index, value)
-                    }
-                    onAdd={() => addProjectHighlight(project.id)}
-                    onRemove={(index) => removeProjectHighlight(project.id, index)}
-                    itemClassName="text-sm text-slate-700"
-                  />
-                </div>
-              ))}
-            </div>
-          </SectionWrapper>
-        ) : null}
-
-        <div className="grid gap-8 md:grid-cols-2">
-          {sections.education ? (
-            <SectionWrapper title="Education">
-              <div className="space-y-5">
-                {education.map((item) => (
-                  <div key={item.id} className="space-y-2">
-                    <EditableText
-                      value={item.school}
-                      onChange={(value) =>
-                        updateEducation(item.id, 'school', value)
-                      }
-                      className="text-sm font-semibold"
-                      placeholder="School"
-                    />
-                    <EditableText
-                      value={item.degree}
-                      onChange={(value) =>
-                        updateEducation(item.id, 'degree', value)
-                      }
-                      className="text-xs uppercase tracking-[0.2em] text-slate-500"
-                      placeholder="Degree"
-                    />
-                    <EditableText
-                      value={item.location}
-                      onChange={(value) =>
-                        updateEducation(item.id, 'location', value)
-                      }
-                      className="text-xs text-slate-500"
-                      placeholder="Location"
-                    />
-                    <EditableText
-                      value={`${item.startDate}`}
-                      onChange={(value) =>
-                        updateEducation(item.id, 'startDate', value)
-                      }
-                      className="text-xs text-slate-500"
-                      placeholder="Start"
-                    />
-                    <EditableText
-                      value={item.endDate}
-                      onChange={(value) =>
-                        updateEducation(item.id, 'endDate', value)
-                      }
-                      className="text-xs text-slate-500"
-                      placeholder="End"
-                    />
-                    <EditableList
-                      items={item.details}
-                      onChange={(index, value) =>
-                        updateEducationDetail(item.id, index, value)
-                      }
-                      onAdd={() => addEducationDetail(item.id)}
-                      onRemove={(index) =>
-                        removeEducationDetail(item.id, index)
-                      }
-                      itemClassName="text-sm text-slate-700"
-                    />
-                  </div>
-                ))}
-              </div>
-            </SectionWrapper>
-          ) : null}
-
-          {sections.skills ? (
-            <SectionWrapper title="Skills">
+          return (
+            <SectionWrapper
+              key={section.id}
+              title={section.title}
+              onTitleChange={(value) => updateSectionTitle(section.id, value)}
+              onAddItem={() => addItem(section.id)}
+            >
               <div className="space-y-4">
-                {skills.map((group) => (
-                  <div key={group.id} className="space-y-2">
+                {section.items.map((item) => (
+                  <ItemWrapper
+                    key={item.id}
+                    onRemove={() => removeItem(section.id, item.id)}
+                  >
                     <EditableText
-                      value={group.label}
+                      value={item.label}
                       onChange={(value) =>
-                        updateSkillGroup(group.id, 'label', value)
+                        updateSkillItem(section.id, item.id, 'label', value)
                       }
                       className="text-xs uppercase tracking-[0.2em] text-slate-500"
                       placeholder="Category"
                     />
                     <EditableList
-                      items={group.items}
+                      items={item.items}
                       onChange={(index, value) =>
-                        updateSkillItem(group.id, index, value)
+                        updateSkillEntry(section.id, item.id, index, value)
                       }
-                      onAdd={() => addSkillItem(group.id)}
-                      onRemove={(index) => removeSkillItem(group.id, index)}
+                      onAdd={() => addSkillEntry(section.id, item.id)}
+                      onRemove={(index) =>
+                        removeSkillEntry(section.id, item.id, index)
+                      }
                       itemClassName="text-sm text-slate-700"
                     />
-                  </div>
+                  </ItemWrapper>
                 ))}
               </div>
             </SectionWrapper>
-          ) : null}
-        </div>
-
-        {sections.certifications ? (
-          <SectionWrapper title="Certifications">
-            <div className="space-y-3">
-              {certifications.map((cert) => (
-                <div key={cert.id} className="flex flex-wrap gap-2 text-sm">
-                  <EditableText
-                    value={cert.name}
-                    onChange={(value) =>
-                      updateCertification(cert.id, 'name', value)
-                    }
-                    className="font-semibold"
-                    placeholder="Certification"
-                  />
-                  <span className="text-slate-400">·</span>
-                  <EditableText
-                    value={cert.issuer}
-                    onChange={(value) =>
-                      updateCertification(cert.id, 'issuer', value)
-                    }
-                    className="text-slate-600"
-                    placeholder="Issuer"
-                  />
-                  <span className="text-slate-400">·</span>
-                  <EditableText
-                    value={cert.year}
-                    onChange={(value) =>
-                      updateCertification(cert.id, 'year', value)
-                    }
-                    className="text-slate-500"
-                    placeholder="Year"
-                  />
-                </div>
-              ))}
-            </div>
-          </SectionWrapper>
-        ) : null}
+          );
+        })}
       </div>
     </div>
   );

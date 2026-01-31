@@ -1,11 +1,3 @@
-export type ResumeSectionId =
-  | 'summary'
-  | 'experience'
-  | 'projects'
-  | 'education'
-  | 'skills'
-  | 'certifications';
-
 export type TemplateId = 'professional' | 'creative' | 'bold' | 'modern';
 
 export type ResumeBasics = {
@@ -15,10 +7,9 @@ export type ResumeBasics = {
   phone: string;
   location: string;
   website: string;
-  summary: string;
 };
 
-export type ResumeExperience = {
+export type ExperienceItem = {
   id: string;
   company: string;
   role: string;
@@ -29,14 +20,7 @@ export type ResumeExperience = {
   highlights: string[];
 };
 
-export type ResumeProject = {
-  id: string;
-  name: string;
-  description: string;
-  highlights: string[];
-};
-
-export type ResumeEducation = {
+export type EducationItem = {
   id: string;
   school: string;
   degree: string;
@@ -46,27 +30,41 @@ export type ResumeEducation = {
   details: string[];
 };
 
-export type ResumeSkillGroup = {
+export type SkillItem = {
   id: string;
   label: string;
   items: string[];
 };
 
-export type ResumeCertification = {
+export type SectionType = 'experience' | 'education' | 'skills';
+
+export type ExperienceSection = {
   id: string;
-  name: string;
-  issuer: string;
-  year: string;
+  type: 'experience';
+  title: string;
+  visible: boolean;
+  items: ExperienceItem[];
 };
 
-export type ResumeSections = Record<ResumeSectionId, boolean>;
+export type EducationSection = {
+  id: string;
+  type: 'education';
+  title: string;
+  visible: boolean;
+  items: EducationItem[];
+};
+
+export type SkillsSection = {
+  id: string;
+  type: 'skills';
+  title: string;
+  visible: boolean;
+  items: SkillItem[];
+};
+
+export type ResumeSection = ExperienceSection | EducationSection | SkillsSection;
 
 export type ResumeData = {
   basics: ResumeBasics;
-  experience: ResumeExperience[];
-  projects: ResumeProject[];
-  education: ResumeEducation[];
-  skills: ResumeSkillGroup[];
-  certifications: ResumeCertification[];
-  sections: ResumeSections;
+  sections: ResumeSection[];
 };
