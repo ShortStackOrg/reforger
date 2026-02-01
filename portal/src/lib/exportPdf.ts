@@ -1,40 +1,43 @@
-import html2canvas from 'html2canvas';
-import { jsPDF } from 'jspdf';
+function extractStyles(): string {
+  const parts: string[] = [];
+  for (const sheet of Array.from(document.styleSheets)) {
+    try {
+      for (const rule of Array.from(sheet.cssRules)) {
+        parts.push(rule.cssText);
+      }
+    } catch {
+      // cross-origin sheet — skip
+    }
+  }
+  return parts.join('\n');
+}
 
 export const exportResumeToPdf = async (
   element: HTMLElement,
   fileName: string
 ) => {
-  const body = document.body;
-  body.classList.add('pdf-export-mode');
+  const html = element.outerHTML;
+  const styles = extractStyles();
+  const bodyClasses = document.body.className;
+  const baseUrl = window.location.origin;
 
-  try {
-    const canvas = await html2canvas(element, {
-      scale: 2,
-      useCORS: true,
-      backgroundColor: '#ffffff',
-      scrollY: -window.scrollY,
-    });
+  const res = await fetch('/api/export-pdf', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ html, styles, bodyClasses, baseUrl }),
+  });
 
-    const imgData = canvas.toDataURL('image/png');
-    const pdf = new jsPDF({
-      orientation: 'portrait',
-      unit: 'pt',
-      format: 'a4',
-    });
-
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = pdf.internal.pageSize.getHeight();
-    const imgProps = pdf.getImageProperties(imgData);
-    const imgHeight = (imgProps.height * pdfWidth) / imgProps.width;
-
-    const totalPages = Math.ceil(imgHeight / pdfHeight);
-    for (let i = 0; i < totalPages; i++) {
-      if (i > 0) pdf.addPage();
-      pdf.addImage(imgData, 'PNG', 0, -(i * pdfHeight), pdfWidth, imgHeight);
-    }
-    pdf.save(fileName);
-  } finally {
-    body.classList.remove('pdf-export-mode');
+  if (!res.ok) {
+    throw new Error(`PDF export failed: ${res.status}`);
   }
+
+  const blob = await res.blob();
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = fileName;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
 };

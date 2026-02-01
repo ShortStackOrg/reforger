@@ -81,11 +81,8 @@
   }
 }
 
-body.pdf-export-mode {
-  background: white;
-}
-
-body.pdf-export-mode #resume-canvas {
-  box-shadow: none;
-  border-radius: 0;
+@media print {
+  section {
+    break-inside: avoid;
+  }
 }
