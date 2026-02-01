@@ -24,7 +24,7 @@ const ItemWrapper = ({ children, onRemove, className }: ItemWrapperProps) => {
           type="button"
           variant="ghost"
           size="icon"
-          className="absolute right-1 top-1 h-6 w-6 text-muted-foreground opacity-0 transition group-hover:opacity-100 hover:text-foreground"
+          className="absolute left-1/2 -top-3 h-6 w-6 -translate-x-1/2 text-muted-foreground opacity-0 transition group-hover:opacity-100 hover:text-foreground"
           onClick={onRemove}
           aria-label="Remove item"
         >

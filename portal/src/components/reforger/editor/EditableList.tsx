@@ -28,7 +28,7 @@ const EditableList = ({
 
   return (
     <div className={cn('space-y-2', className)}>
-      <ListElement className="space-y-1">
+      <ListElement className="w-full space-y-1 overflow-hidden">
         {items.map((item, index) => (
           <li key={index} className="flex gap-2">
             <span className="mt-1 text-xs text-muted-foreground">
@@ -37,7 +37,7 @@ const EditableList = ({
             <EditableText
               value={item}
               onChange={(value) => onChange(index, value)}
-              className={cn('flex-1', itemClassName)}
+              className={cn('flex-1 min-w-0', itemClassName)}
               placeholder="Add detail"
               multiline
             />

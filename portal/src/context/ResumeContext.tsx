@@ -242,10 +242,25 @@ export const ResumeProvider = ({
             if (section.id !== sectionId) {
               return section;
             }
-            return {
-              ...section,
-              items: section.items.filter((item) => item.id !== itemId),
-            };
+            if (section.type === 'experience') {
+              return {
+                ...section,
+                items: section.items.filter((item) => item.id !== itemId),
+              };
+            }
+            if (section.type === 'education') {
+              return {
+                ...section,
+                items: section.items.filter((item) => item.id !== itemId),
+              };
+            }
+            if (section.type === 'skills') {
+              return {
+                ...section,
+                items: section.items.filter((item) => item.id !== itemId),
+              };
+            }
+            return section;
           }),
         }));
       },

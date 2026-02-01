@@ -92,7 +92,7 @@ const ProfessionalTemplate = () => {
                       onRemove={() => removeItem(section.id, item.id)}
                     >
                       <div className="flex flex-wrap items-baseline justify-between gap-2">
-                        <div className="space-y-1">
+                        <div className="min-w-0 flex-1 space-y-1">
                           <EditableText
                             value={item.role}
                             onChange={(value) =>
@@ -116,12 +116,12 @@ const ProfessionalTemplate = () => {
                                 value
                               )
                             }
-                            className="text-xs uppercase tracking-[0.2em] text-slate-500"
+                            className="w-full text-xs uppercase tracking-[0.2em] text-slate-500"
                             placeholder="Company"
                           />
                         </div>
-                        <div className="text-xs text-slate-500">
-                          <div className="flex items-center justify-end gap-2">
+                        <div className="min-w-[140px] text-xs text-slate-500 text-right">
+                          <div className="flex flex-wrap items-center justify-end gap-2">
                             <EditableText
                               value={item.startDate}
                               onChange={(value) =>
@@ -213,71 +213,76 @@ const ProfessionalTemplate = () => {
                       key={item.id}
                       onRemove={() => removeItem(section.id, item.id)}
                     >
-                      <EditableText
-                        value={item.school}
-                        onChange={(value) =>
-                          updateEducationItem(
-                            section.id,
-                            item.id,
-                            'school',
-                            value
-                          )
-                        }
-                        className="text-sm font-semibold"
-                        placeholder="School"
-                      />
-                      <EditableText
-                        value={item.degree}
-                        onChange={(value) =>
-                          updateEducationItem(
-                            section.id,
-                            item.id,
-                            'degree',
-                            value
-                          )
-                        }
-                        className="text-xs uppercase tracking-[0.2em] text-slate-500"
-                        placeholder="Degree"
-                      />
-                      <EditableText
-                        value={item.location}
-                        onChange={(value) =>
-                          updateEducationItem(
-                            section.id,
-                            item.id,
-                            'location',
-                            value
-                          )
-                        }
-                        className="text-xs text-slate-500"
-                        placeholder="Location"
-                      />
-                      <div className="flex items-center gap-2 text-xs text-slate-500">
-                        <EditableText
-                          value={item.startDate}
-                          onChange={(value) =>
-                            updateEducationItem(
-                              section.id,
-                              item.id,
-                              'startDate',
-                              value
-                            )
-                          }
-                          placeholder="Start"
-                        />
-                        <span className="text-slate-400">-</span>
-                        <EditableText
-                          value={item.endDate}
-                          onChange={(value) =>
-                            updateEducationItem(
-                              section.id,
-                              item.id,
-                              'endDate',
-                              value
-                            )
-                          }
-                          placeholder="End"
-                        />
+                      <div className="flex flex-wrap items-baseline justify-between gap-2">
+                        <div className="min-w-0 flex-1 space-y-1">
+                          <EditableText
+                            value={item.school}
+                            onChange={(value) =>
+                              updateEducationItem(
+                                section.id,
+                                item.id,
+                                'school',
+                                value
+                              )
+                            }
+                            className="text-sm font-semibold"
+                            placeholder="School"
+                          />
+                          <EditableText
+                            value={item.degree}
+                            onChange={(value) =>
+                              updateEducationItem(
+                                section.id,
+                                item.id,
+                                'degree',
+                                value
+                              )
+                            }
+                            className="w-full text-xs uppercase tracking-[0.2em] text-slate-500"
+                            placeholder="Degree"
+                          />
+                        </div>
+                        <div className="min-w-[140px] text-xs text-slate-500 text-right">
+                          <div className="flex flex-wrap items-center justify-end gap-2">
+                            <EditableText
+                              value={item.startDate}
+                              onChange={(value) =>
+                                updateEducationItem(
+                                  section.id,
+                                  item.id,
+                                  'startDate',
+                                  value
+                                )
+                              }
+                              placeholder="Start"
+                            />
+                            <span className="text-slate-400">-</span>
+                            <EditableText
+                              value={item.endDate}
+                              onChange={(value) =>
+                                updateEducationItem(
+                                  section.id,
+                                  item.id,
+                                  'endDate',
+                                  value
+                                )
+                              }
+                              placeholder="End"
+                            />
+                          </div>
+                          <EditableText
+                            value={item.location}
+                            onChange={(value) =>
+                              updateEducationItem(
+                                section.id,
+                                item.id,
+                                'location',
+                                value
+                              )
+                            }
+                            placeholder="Location"
+                          />
+                        </div>
                       </div>
                       <EditableList
                         items={item.details}

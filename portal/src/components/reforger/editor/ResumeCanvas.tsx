@@ -15,19 +15,21 @@ const ResumeCanvas = React.forwardRef<HTMLDivElement, ResumeCanvasProps>(
 
     return (
       <div ref={containerRef} className="h-full w-full overflow-auto">
-        <div
-          className="origin-top-left"
-          style={{
-            transform: `scale(${scale})`,
-            width: `${baseWidth}px`,
-          }}
-        >
+        <div className="flex min-h-full justify-center">
           <div
-            id="resume-canvas"
-            ref={ref}
-            className="min-h-[1123px] w-full rounded-2xl bg-white shadow-[0_25px_80px_-40px_rgba(15,23,42,0.45)]"
+            className="origin-top-left"
+            style={{
+              transform: `scale(${scale})`,
+              width: `${baseWidth}px`,
+            }}
           >
-            <TemplateRenderer templateId={templateId} />
+            <div
+              id="resume-canvas"
+              ref={ref}
+              className="min-h-[1123px] w-full overflow-hidden rounded-2xl bg-white shadow-[0_25px_80px_-40px_rgba(15,23,42,0.45)]"
+            >
+              <TemplateRenderer templateId={templateId} />
+            </div>
           </div>
         </div>
       </div>

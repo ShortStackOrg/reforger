@@ -44,7 +44,9 @@ const EditableText = ({
     if (!ref.current) {
       return;
     }
-    setIsEmpty(ref.current.innerText.trim().length === 0);
+    const nextValue = ref.current.innerText;
+    setIsEmpty(nextValue.trim().length === 0);
+    onChange(nextValue);
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
@@ -71,9 +73,10 @@ const EditableText = ({
       onKeyDown={handleKeyDown}
       onPaste={handlePaste}
       className={cn(
-        'min-h-[1.2em] outline-none transition',
+        'min-h-[1.2em] whitespace-pre-wrap break-words [overflow-wrap:anywhere] outline-none transition',
+        multiline ? 'w-full min-w-0' : 'min-w-[6ch]',
         isEmpty && placeholder
-          ? 'relative before:pointer-events-none before:absolute before:left-0 before:top-0 before:text-muted-foreground before:content-[attr(data-placeholder)]'
+          ? 'relative before:pointer-events-none before:absolute before:inset-0 before:text-muted-foreground before:content-[attr(data-placeholder)] before:text-inherit before:whitespace-pre-wrap'
           : '',
         className
       )}
