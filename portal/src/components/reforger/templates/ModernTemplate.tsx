@@ -30,7 +30,7 @@ const ModernTemplate = () => {
   const { basics, sections } = resumeData;
 
   return (
-    <div className="flex h-full w-full flex-col gap-8 bg-white px-10 py-12 text-slate-900">
+    <div className="flex min-h-full w-full flex-col gap-8 bg-white px-10 py-12 text-slate-900">
       <header className="flex flex-wrap items-start justify-between gap-6">
         <div className="space-y-2">
           <EditableText

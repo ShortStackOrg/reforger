@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { useViewMode } from '@/context/ViewModeContext';
 import { cn } from '@/lib/utils';
 import { Plus } from 'lucide-react';
 import React from 'react';
@@ -23,6 +24,13 @@ const SectionWrapper = ({
   headingClassName,
   titleClassName,
 }: SectionWrapperProps) => {
+  const { viewMode } = useViewMode();
+
+  if (viewMode) {
+    onTitleChange = undefined;
+    onAddItem = undefined;
+  }
+
   return (
     <section className={cn('space-y-3', className)}>
       <div className="flex flex-wrap items-center justify-between gap-3">

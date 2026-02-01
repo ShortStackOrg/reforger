@@ -30,7 +30,7 @@ const BoldTemplate = () => {
   const { basics, sections } = resumeData;
 
   return (
-    <div className="relative h-full w-full bg-white text-slate-900">
+    <div className="relative min-h-full w-full bg-white text-slate-900">
       <div className="absolute left-0 top-0 h-full w-3 bg-slate-900" />
       <div className="flex flex-col gap-8 px-12 py-12">
         <header className="space-y-4">

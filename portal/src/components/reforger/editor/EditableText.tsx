@@ -1,5 +1,6 @@
 "use client";
 
+import { useViewMode } from '@/context/ViewModeContext';
 import { cn } from '@/lib/utils';
 import React, { useEffect, useRef, useState } from 'react';
 
@@ -18,6 +19,7 @@ const EditableText = ({
   placeholder,
   multiline = false,
 }: EditableTextProps) => {
+  const { viewMode } = useViewMode();
   const ref = useRef<HTMLDivElement>(null);
   const [isEmpty, setIsEmpty] = useState(!value);
 
@@ -61,6 +63,20 @@ const EditableText = ({
     const text = event.clipboardData.getData('text/plain');
     document.execCommand('insertText', false, text);
   };
+
+  if (viewMode) {
+    return (
+      <div
+        className={cn(
+          'min-h-[1.2em] whitespace-pre-wrap break-words [overflow-wrap:anywhere]',
+          multiline ? 'w-full min-w-0' : 'min-w-[6ch]',
+          className
+        )}
+      >
+        {value}
+      </div>
+    );
+  }
 
   return (
     <div

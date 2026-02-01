@@ -87,4 +87,5 @@ body.pdf-export-mode {
 
 body.pdf-export-mode #resume-canvas {
   box-shadow: none;
+  border-radius: 0;
 }

@@ -14,7 +14,6 @@ import { SectionType, TemplateId } from '@/types/resume';
 import {
   ChevronDown,
   ChevronUp,
-  Download,
   Eye,
   EyeOff,
   Plus,
@@ -25,8 +24,7 @@ import { useState } from 'react';
 type EditorSidebarProps = {
   templateId: TemplateId;
   onTemplateChange: (templateId: TemplateId) => void;
-  onExport: () => void;
-  isExporting: boolean;
+  onViewResult: () => void;
 };
 
 const sectionTypeOptions: { value: SectionType; label: string }[] = [
@@ -38,8 +36,7 @@ const sectionTypeOptions: { value: SectionType; label: string }[] = [
 const EditorSidebar = ({
   templateId,
   onTemplateChange,
-  onExport,
-  isExporting,
+  onViewResult,
 }: EditorSidebarProps) => {
   const {
     resumeData,
@@ -181,12 +178,11 @@ const EditorSidebar = ({
 
       <Button
         type="button"
-        className="mt-auto gap-2"
-        onClick={onExport}
-        disabled={isExporting}
+        className="gap-2"
+        onClick={onViewResult}
       >
-        <Download className="h-4 w-4" />
-        {isExporting ? 'Exporting...' : 'Export PDF'}
+        <Eye className="h-4 w-4" />
+        View Result
       </Button>
     </aside>
   );

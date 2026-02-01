@@ -3,10 +3,11 @@
 import EditorSidebar from '@/components/reforger/editor/EditorSidebar';
 import ResumeCanvas from '@/components/reforger/editor/ResumeCanvas';
 import { Button } from '@/components/ui/button';
+import { useViewMode } from '@/context/ViewModeContext';
 import { exportResumeToPdf } from '@/lib/exportPdf';
 import { cn } from '@/lib/utils';
 import { TemplateId } from '@/types/resume';
-import { Menu, X } from 'lucide-react';
+import { ArrowLeft, Download, Menu, X } from 'lucide-react';
 import React, { useRef, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -17,6 +18,7 @@ type EditorLayoutProps = {
 
 const EditorLayout = ({ templateId, onTemplateChange }: EditorLayoutProps) => {
   const resumeRef = useRef<HTMLDivElement>(null);
+  const { viewMode, setViewMode } = useViewMode();
   const [isExporting, setIsExporting] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -36,6 +38,36 @@ const EditorLayout = ({ templateId, onTemplateChange }: EditorLayoutProps) => {
     }
   };
 
+  if (viewMode) {
+    return (
+      <div className="flex min-h-[calc(100vh-64px)] flex-col bg-slate-100">
+        <div className="flex items-center justify-between border-b border-slate-200 bg-white px-4 py-3">
+          <Button
+            type="button"
+            variant="ghost"
+            className="gap-2"
+            onClick={() => setViewMode(false)}
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to Edit
+          </Button>
+          <Button
+            type="button"
+            className="gap-2"
+            onClick={handleExport}
+            disabled={isExporting}
+          >
+            <Download className="h-4 w-4" />
+            {isExporting ? 'Exporting...' : 'Export PDF'}
+          </Button>
+        </div>
+        <div className="flex-1 p-4 md:p-8">
+          <ResumeCanvas ref={resumeRef} templateId={templateId} />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex min-h-[calc(100vh-64px)] bg-slate-100">
       <div
@@ -50,8 +82,7 @@ const EditorLayout = ({ templateId, onTemplateChange }: EditorLayoutProps) => {
             onTemplateChange(next);
             setIsSidebarOpen(false);
           }}
-          onExport={handleExport}
-          isExporting={isExporting}
+          onViewResult={() => setViewMode(true)}
         />
       </div>
 

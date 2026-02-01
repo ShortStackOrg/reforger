@@ -30,7 +30,7 @@ const CreativeTemplate = () => {
   const { basics, sections } = resumeData;
 
   return (
-    <div className="grid h-full w-full grid-cols-[220px_1fr] bg-white text-slate-900">
+    <div className="grid min-h-full w-full grid-cols-[220px_1fr] bg-white text-slate-900">
       <aside className="flex flex-col gap-6 bg-amber-50 px-6 py-10">
         <div className="space-y-2">
           <EditableText

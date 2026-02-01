@@ -28,7 +28,11 @@ export const exportResumeToPdf = async (
     const imgProps = pdf.getImageProperties(imgData);
     const imgHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
-    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, Math.min(imgHeight, pdfHeight));
+    const totalPages = Math.ceil(imgHeight / pdfHeight);
+    for (let i = 0; i < totalPages; i++) {
+      if (i > 0) pdf.addPage();
+      pdf.addImage(imgData, 'PNG', 0, -(i * pdfHeight), pdfWidth, imgHeight);
+    }
     pdf.save(fileName);
   } finally {
     body.classList.remove('pdf-export-mode');

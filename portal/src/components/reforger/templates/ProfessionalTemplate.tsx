@@ -30,7 +30,7 @@ const ProfessionalTemplate = () => {
   const { basics, sections } = resumeData;
 
   return (
-    <div className="flex h-full w-full flex-col gap-8 bg-white px-10 py-12 text-slate-900">
+    <div className="flex min-h-full w-full flex-col gap-8 bg-white px-10 py-12 text-slate-900">
       <header className="space-y-3 border-b border-slate-200 pb-6">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div className="space-y-1">

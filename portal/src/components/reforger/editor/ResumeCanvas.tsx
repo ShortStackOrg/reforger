@@ -26,7 +26,7 @@ const ResumeCanvas = React.forwardRef<HTMLDivElement, ResumeCanvasProps>(
             <div
               id="resume-canvas"
               ref={ref}
-              className="min-h-[1123px] w-full overflow-hidden rounded-2xl bg-white shadow-[0_25px_80px_-40px_rgba(15,23,42,0.45)]"
+              className="min-h-[1123px] w-full rounded-2xl bg-white shadow-[0_25px_80px_-40px_rgba(15,23,42,0.45)]"
             >
               <TemplateRenderer templateId={templateId} />
             </div>

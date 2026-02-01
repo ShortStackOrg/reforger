@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from '@/components/ui/button';
+import { useViewMode } from '@/context/ViewModeContext';
 import { cn } from '@/lib/utils';
 import { Plus, X } from 'lucide-react';
 import EditableText from './EditableText';
@@ -24,7 +25,13 @@ const EditableList = ({
   itemClassName,
   ordered = false,
 }: EditableListProps) => {
+  const { viewMode } = useViewMode();
   const ListElement = ordered ? 'ol' : 'ul';
+
+  if (viewMode) {
+    onAdd = undefined;
+    onRemove = undefined;
+  }
 
   return (
     <div className={cn('space-y-2', className)}>

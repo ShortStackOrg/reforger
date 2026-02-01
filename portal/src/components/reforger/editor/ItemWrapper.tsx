@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from '@/components/ui/button';
+import { useViewMode } from '@/context/ViewModeContext';
 import { cn } from '@/lib/utils';
 import { Trash2 } from 'lucide-react';
 import React from 'react';
@@ -12,10 +13,17 @@ type ItemWrapperProps = {
 };
 
 const ItemWrapper = ({ children, onRemove, className }: ItemWrapperProps) => {
+  const { viewMode } = useViewMode();
+
+  if (viewMode) {
+    onRemove = undefined;
+  }
+
   return (
     <div
       className={cn(
-        'group relative rounded-xl border border-transparent p-1 transition hover:border-slate-200',
+        'group relative rounded-xl border border-transparent p-1 transition',
+        !viewMode && 'hover:border-slate-200',
         className
       )}
     >

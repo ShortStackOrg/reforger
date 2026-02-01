@@ -2,6 +2,7 @@
 
 import EditorLayout from '@/components/reforger/editor/EditorLayout';
 import { ResumeProvider } from '@/context/ResumeContext';
+import { ViewModeProvider } from '@/context/ViewModeContext';
 import { templateOptions } from '@/lib/templateData';
 import { TemplateId } from '@/types/resume';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -33,10 +34,12 @@ const EditorPage = () => {
 
   return (
     <ResumeProvider>
-      <EditorLayout
-        templateId={templateId}
-        onTemplateChange={handleTemplateChange}
-      />
+      <ViewModeProvider>
+        <EditorLayout
+          templateId={templateId}
+          onTemplateChange={handleTemplateChange}
+        />
+      </ViewModeProvider>
     </ResumeProvider>
   );
 };
