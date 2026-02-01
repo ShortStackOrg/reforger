@@ -9,8 +9,9 @@ const config: Config = {
   ],
   theme: {
   	extend: {
-  		spacing: {
-  			'400': '400px'
+  		fontFamily: {
+  			display: ['var(--font-display)', 'system-ui', 'sans-serif'],
+  			body: ['var(--font-body)', 'system-ui', 'sans-serif']
   		},
   		colors: {
   			background: 'hsl(var(--background))',
