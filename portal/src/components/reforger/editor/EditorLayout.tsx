@@ -31,7 +31,7 @@ const EditorLayout = ({ templateId, onTemplateChange }: EditorLayoutProps) => {
       setIsExporting(true);
       await exportResumeToPdf(resumeRef.current, `${templateId}-resume.pdf`);
       toast.success('PDF exported.');
-    } catch (error) {
+    } catch {
       toast.error('Export failed. Try again.');
     } finally {
       setIsExporting(false);
