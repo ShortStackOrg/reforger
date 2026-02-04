@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import puppeteer from 'puppeteer';
+import chromium from '@sparticuz/chromium';
+import puppeteer from 'puppeteer-core';
+
+export const runtime = 'nodejs';
 
 export async function POST(req: NextRequest) {
   const { html, styles, bodyClasses, baseUrl } = await req.json();
@@ -21,9 +24,20 @@ export async function POST(req: NextRequest) {
 </body>
 </html>`;
 
+  const isVercel = Boolean(process.env.VERCEL);
+  const executablePath =
+    process.env.CHROMIUM_PATH ||
+    (isVercel ? await chromium.executablePath() : null);
+  if (!executablePath) {
+    throw new Error(
+      'Chromium executable not found. Set CHROMIUM_PATH for local dev.'
+    );
+  }
+
   const browser = await puppeteer.launch({
-    headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    args: chromium.args,
+    executablePath,
+    headless: chromium.headless,
   });
 
   try {
